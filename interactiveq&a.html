@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  .quiz-container {
+    max-width: 600px;
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 50px auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+  h1 {
+    margin-bottom: 20px;
+  }
+  .question {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  .answers button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    border: none;
+    background: #444;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .answers button:hover {
+    background: #666;
+  }
+  .result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Interactive Q&A</h1>
+  <div id="quiz">
+    <div class="question" id="question">Question text</div>
+    <div class="answers" id="answers"></div>
+  </div>
+  <div class="result" id="result"></div>
+  <button id="nextBtn" style="display:none;">Next Question</button>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "What does HTML stand for?",
+      answers: ["Hyper Text Markup Language", "High Tech Machine Language", "Hyper Tool Markup Language", "Home Tool Making Language"],
+      correct: 0
+    },
+    {
+      question: "Which language is used for styling web pages?",
+      answers: ["HTML", "JQuery", "CSS", "XML"],
+      correct: 2
+    },
+    {
+      question: "Which is not a JavaScript framework?",
+      answers: ["React", "Angular", "Vue", "Python"],
+      correct: 3
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const questionEl = document.getElementById('question');
+  const answersEl = document.getElementById('answers');
+  const resultEl = document.getElementById('result');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function loadQuestion() {
+    resultEl.textContent = '';
+    nextBtn.style.display = 'none';
+    const q = quizData[currentQuestion];
+    questionEl.textContent = q.question;
+    answersEl.innerHTML = '';
+    q.answers.forEach((answer, index) => {
+      const btn = document.createElement('button');
+      btn.textContent = answer;
+      btn.addEventListener('click', () => checkAnswer(index));
+      answersEl.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(index) {
+    const correctIndex = quizData[currentQuestion].correct;
+    if (index === correctIndex) {
+      score++;
+      resultEl.textContent = "✅ Correct!";
+      resultEl.style.color = "lightgreen";
+    } else {
+      resultEl.textContent = "❌ Wrong!";
+      resultEl.style.color = "red";
+    }
+    nextBtn.style.display = 'block';
+  }
+
+  nextBtn.addEventListener('click', () => {
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      quizOver();
+    }
+  });
+
+  function quizOver() {
+    questionEl.textContent = "Quiz Finished!";
+    answersEl.innerHTML = '';
+    resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+    nextBtn.style.display = 'none';
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
